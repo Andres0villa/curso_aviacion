@@ -1,0 +1,139 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ingreso al Curso de Pilotaje</title>
+  <style>
+    body {
+      background-color: #add8e6;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background-color: #005f99;
+      color: white;
+      padding: 10px 0;
+    }
+
+    #slider {
+      position: relative;
+      width: 80%;
+      height: 300px;
+      margin: 20px auto;
+      overflow: hidden;
+      border: 5px solid #005f99;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    #slider img {
+      width: 100%;
+      height: 300px;
+      position: absolute;
+      top: 0;
+      left: 100%;
+      transition: all 1s ease-in-out;
+    }
+
+    #slider img.active {
+      left: 0;
+    }
+
+    #slider img.inactive {
+      left: -100%;
+    }
+
+    aside {
+      margin-top: 20px;
+    }
+
+    aside button {
+      background-color: #005f99;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    aside button:hover {
+      background-color: #007acc;
+    }
+
+    .galeria {
+      margin-top: 20px;
+    }
+  </style>
+  <script>
+    // Temporizador de inactividad
+    let inactivityTimeout;
+
+    function resetInactivityTimer() {
+      clearTimeout(inactivityTimeout);
+      // Redirige a la página de cierre de sesión después de 5 segundos de inactividad
+      inactivityTimeout = setTimeout(() => {
+        window.location.href = 'index.html'; // Página de cierre de sesión
+      }, 5000);
+    }
+
+    // Reinicia el temporizador en cualquier interacción
+    document.addEventListener('mousemove', resetInactivityTimer);
+    document.addEventListener('keydown', resetInactivityTimer);
+
+    // Inicia el temporizador al cargar la página
+    document.addEventListener('DOMContentLoaded', resetInactivityTimer);
+
+    // Slider de imágenes
+    document.addEventListener("DOMContentLoaded", function () {
+      const images = document.querySelectorAll("#slider img");
+      let currentIndex = 0;
+
+      function changeSlide() {
+        images[currentIndex].classList.remove("active");
+        images[currentIndex].classList.add("inactive");
+
+        currentIndex = (currentIndex + 1) % images.length;
+
+        images[currentIndex].classList.add("active");
+        images[currentIndex].classList.remove("inactive");
+      }
+
+      images[0].classList.add("active");
+
+      setInterval(changeSlide, 5000);
+    });
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Bienvenido al Curso de Pilotaje</h1>
+  </header>
+
+  <!-- Slider de imágenes -->
+  <section id="slider">
+    <img src="img/foto1.jpg" alt="Avión 1">
+    <img src="img/foto2.jpg" alt="Avión 2">
+    <img src="img/foto3.jpg" alt="Avión 3">
+    <img src="img/foto4.jpg" alt="Avión 4">
+  </section>
+
+  <aside>
+    <?php if (isset($_SESSION['usuario'])): ?>
+      <button onclick="window.location.href='galeria.html'">Ver Galería</button>
+      <button onclick="window.location.href='index.html'">Cerrar Sesión</button>
+    <?php else: ?>
+      <button onclick="window.location.href='login.html'">Iniciar Sesión</button>
+      <button onclick="window.location.href='registro.html'">Registro</button>
+    <?php endif; ?>
+  </aside>
+</body>
+</html>
